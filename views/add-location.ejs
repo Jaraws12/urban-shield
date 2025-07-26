@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Residence Location</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .pin-btn {
+      cursor: pointer;
+      font-size: 1.5rem;
+      margin-left: 10px;
+      transition: transform 0.2s ease;
+    }
+    .pin-btn:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <h3 class="text-center mb-4">Add Your Residence Location</h3>
+
+    <form method="POST" action="/add-location">
+      <div class="mb-3">
+        <label for="mapLink" class="form-label">Google Maps Location Link</label>
+        <div class="d-flex align-items-center">
+          <input type="url" name="mapLink" id="mapLink" class="form-control" placeholder="Paste Google Maps link here" required>
+          <span class="pin-btn" onclick="useCurrentLocation()">📍</span>
+        </div>
+        <small class="text-muted">Click 📍 to auto-fill your current location.</small>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Save Location</button>
+    </form>
+  </div>
+
+  <script>
+    function useCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const lat = position.coords.latitude.toFixed(6);
+            const lng = position.coords.longitude.toFixed(6);
+            const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+            document.getElementById('mapLink').value = googleMapsLink;
+          },
+          error => {
+            alert("Unable to retrieve location. Please allow location access.");
+            console.error(error);
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    }
+  </script>
+
+</body>
+</html>

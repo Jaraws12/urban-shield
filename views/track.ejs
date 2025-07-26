@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Reported Hazards</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      --success-gradient: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .hero-section {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 4rem 0;
+      margin: -2rem -15px 3rem -15px;
+      border-radius: 0 0 2rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-title {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .page-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 0;
+    }
+
+    .hazard-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      border: none;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .hazard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--hover-shadow);
+    }
+
+    .card-img-top {
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .hazard-card:hover .card-img-top {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-title {
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-text {
+      color: #5a6c7d;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .location-badge {
+      background: var(--success-gradient);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .map-btn {
+      background: var(--primary-gradient);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 2rem;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .map-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      color: white;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      background: var(--secondary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-subtitle {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+    }
+
+    .stats-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        margin: -2rem -15px 2rem -15px;
+        padding: 2rem 0;
+      }
+      
+      .page-title {
+        font-size: 2rem;
+      }
+      
+      .card-img-top {
+        height: 200px;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+  <div class="container-fluid px-0">
+    <div class="hero-section">
+      <div class="container">
+        <div class="hero-content text-center">
+          <h1 class="page-title">
+            <i class="fas fa-exclamation-triangle me-3"></i>
+            Hazard Reports
+          </h1>
+          <p class="page-subtitle">Track and manage safety incidents in your area</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <% if (hazards.length === 0) { %>
+        <div class="empty-state fade-in">
+          <div class="empty-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="empty-title">No Hazards Reported</h3>
+          <p class="empty-subtitle">Your area is currently safe. New reports will appear here when submitted.</p>
+        </div>
+      <% } else { %>
+        <!-- Stats Overview -->
+        <div class="stats-card fade-in">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="stat-item">
+                <div class="stat-number"><%= hazards.length %></div>
+                <div class="stat-label">Total Reports</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-item">
+                <div class="stat-number">
+                  <%= hazards.filter(h => h.status === 'active' || !h.status).length %>
+                </div>
+                <div class="stat-label">Active Hazards</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-item">
+                <div class="stat-number">
+                  <%= new Set(hazards.map(h => h.location)).size %>
+                </div>
+                <div class="stat-label">Locations</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hazard Cards -->
+        <div class="row g-4">
+          <% hazards.forEach((hazard, index) => { %>
+            <div class="col-lg-6 col-xl-4 fade-in stagger-<%= (index % 4) + 1 %>">
+              <div class="card hazard-card h-100">
+                <img src="/uploads/<%= hazard.image %>" class="card-img-top" alt="<%= hazard.title %>" loading="lazy">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">
+                    <i class="fas fa-exclamation-circle text-warning me-2"></i>
+                    <%= hazard.title %>
+                  </h5>
+                  <p class="card-text flex-grow-1"><%= hazard.description %></p>
+                  
+                  <div class="location-badge">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <%= hazard.location %>
+                  </div>
+
+                  <div class="location-badge">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <%= hazard.catagory %>
+                  </div>
+
+                  <!-- Status Badge -->
+<% if (hazard.status) { %>
+  <span class="badge 
+    <% if (hazard.status === 'Reported') { %> bg-secondary 
+    <% } else if (hazard.status === 'Acknowledged') { %> bg-info 
+    <% } else if (hazard.status === 'In Progress') { %> bg-warning 
+    <% } else if (hazard.status === 'Resolved') { %> bg-success 
+    <% } else if (hazard.status === 'Rejected') { %> bg-danger 
+    <% } %> mb-2">
+    <i class="fas fa-flag"></i> <%= hazard.status %>
+  </span>
+<% } %>
+
+
+                  
+                  
+                  <a href="<%= hazard.mapLink %>" target="_blank" class="map-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    View on Map
+                  </a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Add smooth scrolling and enhanced interactions
+    document.addEventListener('DOMContentLoaded', function() {
+      // Trigger fade-in animations
+      const fadeElements = document.querySelectorAll('.fade-in');
+      fadeElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+      });
+      
+      setTimeout(() => {
+        fadeElements.forEach(el => {
+          el.style.transition = 'all 0.6s ease-out';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      }, 100);
+
+      // Add click analytics (placeholder)
+      document.querySelectorAll('.map-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          console.log('Map link clicked:', this.href);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

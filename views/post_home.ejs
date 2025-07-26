@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hazard Reporter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- AOS Animation CSS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link href="/css/style.css" rel="stylesheet" />
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
+
+  <style>
+    /* Background canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      background: linear-gradient(135deg, #001f3f, #004080);
+    }
+
+    /* Header styles */
+    header {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Animated heading */
+    header h1 {
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      animation: fadeInDown 1s ease forwards;
+      opacity: 0;
+    }
+
+    header p.lead {
+      font-size: 1.3rem;
+      animation: fadeInUp 1s ease 0.5s forwards;
+      opacity: 0;
+    }
+
+    header .btn {
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      animation: fadeInUp 1s ease 1s forwards;
+      opacity: 0;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    header .btn:hover {
+      background-color: #004080;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    /* Card hover effect */
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      will-change: transform;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
+      z-index: 10;
+    }
+
+    /* Floating animation for cards */
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .slider-container .card {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Staggered animation delays for floating */
+    .slider-container .card:nth-child(1) {
+      animation-delay: 0s;
+    }
+    .slider-container .card:nth-child(2) {
+      animation-delay: 2s;
+    }
+    .slider-container .card:nth-child(3) {
+      animation-delay: 4s;
+    }
+
+    /* FadeIn animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Footer styling */
+    footer {
+      background: linear-gradient(90deg, #0056b3, #007bff);
+      box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.3);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 576px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      header p.lead {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- Navbar -->
+<%- include('navbar.ejs') %>
+
+<!-- Hero Section -->
+<header class="text-white text-center py-5">
+  <div class="container" data-aos="fade-up" data-aos-duration="1000">
+    <h1 class="display-4">Spotted a pothole, broken sign, or flooded road?</h1>
+    <p class="lead mt-3">Report civic issues directly to the municipal office and track resolution in real-time.</p>
+    <a href="/report" class="btn btn-light btn-lg mt-3 shadow">Report Now</a>
+  </div>
+</header>
+
+
+<!-- Residence Location Prompt -->
+<section class="container py-5 text-center" data-aos="zoom-in" data-aos-duration="1000">
+  <h4 class="mb-3 fw-semibold">Stay Informed Instantly</h4>
+  <p class="text-muted mb-4">Add your residence location so we can notify you if a hazard is reported nearby.</p>
+  <a href="/add-location" class="btn btn-warning btn-lg px-4 shadow">
+    <i class="fas fa-map-marker-alt me-2"></i> Add Your Residence Location
+  </a>
+</section>
+
+
+<!-- Image Cards Section -->
+<section class="slider-container py-5 bg-light">
+  <div class="container" data-aos="fade-right" data-aos-duration="1200">
+    <h2 class="text-center mb-4 fw-bold">Hazards Around Us</h2>
+    <div class="d-flex flex-wrap justify-content-center gap-4">
+      <% for (let i = 2; i <= 4; i++) { %>
+        <div class="card shadow-sm" style="width: 18rem;" data-aos="zoom-in" data-aos-delay="<%= (i-2)*200 %>" data-aos-duration="800">
+          <img src="/images/image<%= i %>.jpeg" class="card-img-top" alt="Hazard Image <%= i %>" style="object-fit: cover; height: 180px;" />
+          <div class="card-body">
+            <h5 class="card-title">Hazard <%= i - 1 %></h5>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<!-- Civic Hazards List -->
+<section class="container py-5">
+  <h2 class="text-center mb-4 fw-bold" data-aos="fade-up" data-aos-duration="1000">What You Can Report</h2>
+  <div class="row g-4">
+    <% const hazards = [
+      "Potholes", "Broken Manholes", "Waterlogging", "Overflowing Dustbins",
+      "Broken Traffic Signals", "Untrimmed Trees", "Abandoned Vehicles",
+      "Open Wires", "Damaged Streetlights", "Illegal Dumping"
+    ]; %>
+    <% hazards.forEach((hazard, idx) => { %>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="<%= idx * 100 %>" data-aos-duration="800">
+        <div class="card shadow-sm h-100 border-primary">
+          <div class="card-body">
+            <h5 class="card-title text-primary"><%= hazard %></h5>
+            <p class="card-text">Report this issue to ensure timely action from your local municipal office.</p>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</section>
+
+
+
+
+
+<!-- Footer -->
+<footer class="text-white text-center py-3">
+  © 2025 Hazard Reporter | Built for better civic engagement
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    once: true,
+    easing: 'ease-in-out',
+    duration: 800,
+  });
+</script>
+
+<!-- Three.js Particle Background -->
+<script>
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("bg-canvas"), alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.position.z = 5;
+
+  const geometry = new THREE.BufferGeometry();
+  const vertices = [];
+
+  for (let i = 0; i < 1200; i++) {
+    vertices.push((Math.random() - 0.5) * 30);
+    vertices.push((Math.random() - 0.5) * 30);
+    vertices.push((Math.random() - 0.5) * 30);
+  }
+
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+  // Create gradient color points using vertex colors
+  const colors = [];
+  for (let i = 0; i < 1200; i++) {
+    const color = new THREE.Color();
+    color.setHSL(0.6 + 0.4 * (i / 1200), 0.7, 0.7);
+    colors.push(color.r, color.g, color.b);
+  }
+  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+  const material = new THREE.PointsMaterial({ size: 0.07, vertexColors: true, transparent: true, opacity: 0.85 });
+  const points = new THREE.Points(geometry, material);
+  scene.add(points);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    points.rotation.y += 0.0008;
+    points.rotation.x += 0.0006;
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+
+</body>
+</html>

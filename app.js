@@ -446,7 +446,7 @@ const imagePathForGemini = path.join(__dirname, "public/uploads", image);
 const base64Image = fs.readFileSync(imagePathForGemini, { encoding: "base64" });
 
 // Call Gemini API (replace with actual API key & URL)
-const geminiResponse = await axios.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}", {
+const geminiResponse = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
   contents: [
     {
       parts: [

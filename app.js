@@ -777,7 +777,7 @@ app.post('/add-location', verifyToken, async (req, res) => {
       }
     });
 
-    res.status(200).send("Location updated successfully.");
+    res.render("/home");
   } catch (err) {
     console.error("Error saving location:", err);
     res.status(500).send("Something went wrong.");

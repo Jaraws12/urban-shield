@@ -49,8 +49,7 @@ app.use((req, res, next) => {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import fs from 'fs';
-import path from 'path';
+
 
 const uploadsDir = path.join(__dirname, 'public/uploads');
 if (!fs.existsSync(uploadsDir)) {

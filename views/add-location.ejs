@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -55,5 +55,494 @@
     }
   </script>
 
+</body>
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Residence Location</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      --hover-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .main-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      border: none;
+      overflow: hidden;
+      max-width: 500px;
+      width: 100%;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card-header {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border: none;
+    }
+
+    .header-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-icon i {
+      font-size: 40px;
+      color: white;
+    }
+
+    .card-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-subtitle {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-top: 10px;
+    }
+
+    .card-body {
+      padding: 40px;
+    }
+
+    .form-floating {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .form-control {
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    .form-control:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      background: white;
+      transform: translateY(-1px);
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .location-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--success-gradient);
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .location-btn:hover {
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 8px 16px rgba(17, 153, 142, 0.3);
+    }
+
+    .location-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .location-btn.loading {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: translateY(-50%) rotate(0deg); }
+      to { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    .help-text {
+      color: #6c757d;
+      font-size: 14px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .help-text i {
+      color: #28a745;
+    }
+
+    .submit-btn {
+      background: var(--primary-gradient);
+      border: none;
+      border-radius: 12px;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      width: 100%;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.5s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--hover-shadow);
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .success-feedback {
+      background: var(--success-gradient);
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .error-feedback {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 10px;
+      }
+      
+      .card-body {
+        padding: 30px 20px;
+      }
+      
+      .card-header {
+        padding: 25px 20px;
+      }
+      
+      .card-title {
+        font-size: 24px;
+      }
+      
+      .header-icon {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .header-icon i {
+        font-size: 30px;
+      }
+    }
+
+    .floating-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .shape:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .shape:nth-child(2) {
+      top: 60%;
+      right: 10%;
+      animation-delay: 2s;
+    }
+
+    .shape:nth-child(3) {
+      bottom: 20%;
+      left: 20%;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-shapes">
+    <div class="shape">
+      <i class="fas fa-map-marker-alt" style="font-size: 60px; color: #667eea;"></i>
+    </div>
+    <div class="shape">
+      <i class="fas fa-home" style="font-size: 50px; color: #764ba2;"></i>
+    </div>
+    <div class="shape">
+      <i class="fas fa-location-dot" style="font-size: 40px; color: #11998e;"></i>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="card form-card">
+      <div class="card-header">
+        <div class="header-icon">
+          <i class="fas fa-home"></i>
+        </div>
+        <h1 class="card-title">Add Residence Location</h1>
+        <p class="card-subtitle">Help us locate you for better service</p>
+      </div>
+      
+      <div class="card-body">
+        <div id="successMessage" class="success-feedback">
+          <i class="fas fa-check-circle"></i>
+          <span>Location detected successfully!</span>
+        </div>
+        
+        <div id="errorMessage" class="error-feedback">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Unable to retrieve location. Please try again.</span>
+        </div>
+
+        <form method="POST" action="/add-location">
+          <div class="form-group">
+            <label for="mapLink" class="form-label fw-semibold mb-2">
+              <i class="fas fa-map-marker-alt me-2"></i>Google Maps Location Link
+            </label>
+            <div class="input-group">
+              <input 
+                type="url" 
+                name="mapLink" 
+                id="mapLink" 
+                class="form-control" 
+                placeholder="Paste your Google Maps link here..." 
+                required
+              >
+              <button type="button" class="location-btn" onclick="useCurrentLocation()" title="Use current location">
+                <i class="fas fa-crosshairs"></i>
+              </button>
+            </div>
+            <div class="help-text">
+              <i class="fas fa-info-circle"></i>
+              Click the target button to automatically detect your current location
+            </div>
+          </div>
+          
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-save me-2"></i>Save My Location
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function useCurrentLocation() {
+      const btn = document.querySelector('.location-btn');
+      const btnIcon = btn.querySelector('i');
+      const successMsg = document.getElementById('successMessage');
+      const errorMsg = document.getElementById('errorMessage');
+      
+      // Hide any previous messages
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+      
+      if (navigator.geolocation) {
+        // Show loading state
+        btn.classList.add('loading');
+        btnIcon.className = 'fas fa-spinner';
+        
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const lat = position.coords.latitude.toFixed(6);
+            const lng = position.coords.longitude.toFixed(6);
+            const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+            
+            // Update input field
+            document.getElementById('mapLink').value = googleMapsLink;
+            
+            // Show success message
+            successMsg.style.display = 'flex';
+            
+            // Reset button state
+            btn.classList.remove('loading');
+            btnIcon.className = 'fas fa-check';
+            
+            // Reset icon after 2 seconds
+            setTimeout(() => {
+              btnIcon.className = 'fas fa-crosshairs';
+            }, 2000);
+          },
+          error => {
+            // Show error message
+            errorMsg.style.display = 'flex';
+            
+            // Reset button state
+            btn.classList.remove('loading');
+            btnIcon.className = 'fas fa-exclamation-triangle';
+            
+            // Reset icon after 3 seconds
+            setTimeout(() => {
+              btnIcon.className = 'fas fa-crosshairs';
+            }, 3000);
+            
+            console.error('Location error:', error);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          }
+        );
+      } else {
+        errorMsg.querySelector('span').textContent = 'Geolocation is not supported by your browser.';
+        errorMsg.style.display = 'flex';
+      }
+    }
+
+    // Auto-hide success/error messages after 5 seconds
+    function autoHideMessage(element) {
+      setTimeout(() => {
+        if (element.style.display === 'flex') {
+          element.style.display = 'none';
+        }
+      }, 5000);
+    }
+
+    // Add form validation feedback
+    document.getElementById('mapLink').addEventListener('input', function() {
+      const input = this;
+      const value = input.value;
+      
+      if (value && (value.includes('maps.google.com') || value.includes('goo.gl'))) {
+        input.style.borderColor = '#28a745';
+        input.style.background = '#f8fff9';
+      } else if (value) {
+        input.style.borderColor = '#ffc107';
+        input.style.background = '#fffbf0';
+      } else {
+        input.style.borderColor = '#e9ecef';
+        input.style.background = '#f8f9fa';
+      }
+    });
+
+    // Observe success/error messages for auto-hide
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          const target = mutation.target;
+          if (target.style.display === 'flex' && (target.id === 'successMessage' || target.id === 'errorMessage')) {
+            autoHideMessage(target);
+          }
+        }
+      });
+    });
+
+    observer.observe(document.getElementById('successMessage'), { attributes: true });
+    observer.observe(document.getElementById('errorMessage'), { attributes: true });
+  </script>
 </body>
 </html>

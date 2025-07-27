@@ -60,6 +60,11 @@ coordinates: {
 
 
 
+status: {
+  type: String,
+  enum: ['Reported', 'Acknowledged', 'In Progress', 'Resolved', 'Rejected'],
+  default: 'Reported'
+},
 
  
 

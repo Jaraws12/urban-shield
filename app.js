@@ -763,7 +763,8 @@ app.post('/add-location', verifyToken, async (req, res) => {
     const match = mapLink.match(/@?(-?\d+\.\d+),\s*(-?\d+\.\d+)/) || mapLink.match(/q=(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
 
     if (!match) {
-      return res.status(400).send("Invalid Google Maps link.");
+      req.flash("error", "Invalid Google Maps link.");
+      return res.redirect("/home");
     }
 
     const latitude = parseFloat(match[1]);
@@ -773,16 +774,19 @@ app.post('/add-location', verifyToken, async (req, res) => {
     await Reporter.findByIdAndUpdate(req.user._id, {
       location: {
         type: "Point",
-        coordinates: [longitude, latitude] // GeoJSON format: [lng, lat]
+        coordinates: [longitude, latitude]
       }
     });
 
-    res.render("/home");
+    req.flash("success", "Location updated successfully.");
+    res.redirect("/home");
   } catch (err) {
     console.error("Error saving location:", err);
-    res.status(500).send("Something went wrong.");
+    req.flash("error", "Something went wrong while updating location.");
+    res.redirect("/home");
   }
 });
+
 
 
 

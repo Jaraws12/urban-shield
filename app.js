@@ -569,7 +569,7 @@ if (geminiResult !== "yes") {
 
     await Promise.all(emailPromises);
 
-    res.status(200).send("Hazard reported and notifications sent!");
+    res.render("after-report");//redirected to thankyou page 
   } catch (err) {
     console.error("Error in /report:", err);
     res.status(500).send("An error occurred while saving the report.");
